@@ -10,14 +10,8 @@ DXF_SAVE_TIME = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 OUTPUT_DXF_DIR = "VC_DXF_OUT/"
 OUTPUT_DXF = f"{OUTPUT_DXF_DIR}/dxf_{DXF_SAVE_TIME}.dxf"
 
-def Display(image, win_title):
-    plt.imshow(image)
-    plt.title(f"{win_title}")
-    plt.xlabel("x")
-    plt.ylabel("y")
-    plt.show()
-
 def main():
+    # create output dir if it doesnt exist
     if not os.path.exists(OUTPUT_DXF_DIR):
         os.mkdir(OUTPUT_DXF_DIR)
 
