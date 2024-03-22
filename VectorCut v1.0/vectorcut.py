@@ -12,6 +12,7 @@ class VectorCut:
     def Preprocess(self):
         grayscaled = cv2.cvtColor(self.input_image, cv2.COLOR_RGB2GRAY)
 
+        # get all edges from image
         blured = cv2.GaussianBlur(grayscaled, (3, 3), 0)
         edges = cv2.Canny(blured, 255, 0)
 
@@ -23,25 +24,34 @@ class VectorCut:
         return contours
     
     def DisplayContours(self):
+        # display contours overlayed to input image
         contours = self.GetContours()
+
         display_overlay = self.input_image.copy()
         cv2.drawContours(display_overlay, contours, -1, (0, 255, 0), 1, lineType=cv2.LINE_AA)
+        
         return display_overlay
     
     def ExtractContourImage(self):
+        # display extracted contours on plain plane
         self.extraction_plane = np.zeros(self.input_image.copy().shape)
+        
         contours = self.GetContours()
         cv2.drawContours(self.extraction_plane, contours, -1, (0, 255, 0), 1, lineType=cv2.LINE_AA)
+        
         return self.extraction_plane
     
     def Convert2DXF(self):
+        # get and process contours
         contours = self.GetContours()
         contours_squeezed = [np.squeeze(cnt, axis=1) for cnt in contours]
 
+        # init new .dxf-file
         dxf_out = dxf.new(self.DXF_VERSION)
         msp = dxf_out.modelspace()
         dxf_out.layers.new(name="BITMAP_CONTOUR_LINES", dxfattribs={"color": 3})
 
+        # draw each contour as line to .dxf
         for contour in contours_squeezed:
             for n in range(len(contour)):
                 if n >= len(contour) - 1:
@@ -62,7 +72,4 @@ class VectorCut:
             plt.xlabel("x")
         
         plt.show()
-    
-
-
     
